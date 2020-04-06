@@ -1,8 +1,8 @@
-#!/bin/bash 
+#!/bin/bash -x 
 
 declare -A playerPosition
 declare -A score
-playerPosition=0
+FINALPOSITION=100
 
 #display start game msg
 function start()
@@ -23,23 +23,33 @@ function rollDice()
 function gameFeature
 {
 	local play=$1
-	currentPosition="$(rollDice)"
-	feature=$((RANDOM%3))
-   case $feature in
-   0)
-		echo "No Play you can stays in this" ${playerPosition[$play]} "position"
-     	;;
-   1)
-		playerPosition[$play]=$((${playerPosition[$play]}+$currentPosition))
-		score[$play]="${score[$play]}  ${playerPosition[$play]}"
-		echo "Ladder found the player moves ahead on" ${playerPosition[$play]} ", $currentPosition received on the die"
-      ;;
-   2)
-		playerPosition[$play]=$((${playerPosition[$play]}-$currentPosition))
-      score[$play]="${score[$play]}  ${playerPosition[$play]}"
-      echo "Snake found the player moves behind on" ${playerPosition[$play]} ", $currentPosition received on the die"
-      ;;
+	playerPosition[$play]=0
+	while [[((${playerPosition[$play]} -lt $FINALPOSITION))]]
+   do
+		currentPosition="$(rollDice)"
+		feature=$((RANDOM%3))
+   	case $feature in
+   	0)
+			echo "No Play you can stays in this" ${playerPosition[$play]} "position"
+     		;;
+   	1)
+			if [[ $((${playerPosition[$play]}+$currentPosition)) -le 100 ]]
+         then
+            playerPosition[$play]=$((${playerPosition[$play]}+$currentPosition))
+         fi
+			echo "Ladder found the player moves ahead on" ${playerPosition[$play]} ", $currentPosition received on the die"
+      	;;
+   	2)
+			if [[ (($((${playerPosition[$play]}-$currentPosition)) -gt 0 ))]]
+			then
+				playerPosition[$play]=$((${playerPosition[$play]}-$currentPosition))
+			else
+				playerPosition[$play]=0
+			fi
+			echo "Snake found the player moves behind on" ${playerPosition[$play]} ", $currentPosition received on the die"
+      	;;
       esac
+	done
 }
 
 gamePlayer="Player1"
