@@ -25,21 +25,22 @@ function gameFeature
 	local play=$1
 	playerPosition[$play]=0
 	while [[((${playerPosition[$play]} -lt $FINALPOSITION))]]
-   do
+	do
 		currentPosition="$(rollDice)"
 		feature=$((RANDOM%3))
-   	case $feature in
-   	0)
+		
+		case $feature in
+		0)
 			echo "No Play you can stays in this" ${playerPosition[$play]} "position"
-     		;;
-   	1)
+			;;
+		1)
 			if [[ (($((${playerPosition[$play]}+$currentPosition)) -le $FINALPOSITION))]]
 			then
-         	playerPosition[$play]=$((${playerPosition[$play]}+$currentPosition))
+				playerPosition[$play]=$((${playerPosition[$play]}+$currentPosition))
 			fi
 			echo "Ladder found the player moves ahead on" ${playerPosition[$play]} ", $currentPosition received on the die"
-      	;;
-   	2)
+			;;
+		2)
 			if [[ (($((${playerPosition[$play]}-$currentPosition)) -gt 0 ))]]
 			then
 				playerPosition[$play]=$((${playerPosition[$play]}-$currentPosition))
@@ -47,8 +48,8 @@ function gameFeature
 				playerPosition[$play]=0
 			fi
 			echo "Snake found the player moves behind on" ${playerPosition[$play]} ", $currentPosition received on the die"
-      	;;
-      esac
+			;;
+		esac
 	done
 }
 
