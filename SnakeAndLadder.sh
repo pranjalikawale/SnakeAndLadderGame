@@ -1,7 +1,13 @@
-#!/bin/bash
+#!/bin/bash -x
 
 gameOn=1
 FINALPOSITION=100
+NOPLAY=0
+LADDER=1
+SNAKE=2
+UPPER_LIMIT=6
+LOWER_LIMIT=1
+
 declare -A counter
 declare -A score
 declare -A playerPosition=0
@@ -16,11 +22,10 @@ function gamePlay()
 		if [[(( $((isPlay%2)) -eq 0))]]
 		then
 			gamePlayer="Player1"
-			gameFeature $gamePlayer
 		else
 			gamePlayer="Player2"
-			gameFeature $gamePlayer
 		fi
+		gameFeature $gamePlayer
 		((isPlay++))
 	done 
 	displayCount
@@ -34,25 +39,22 @@ function gameFeature()
 	echo "$player 's turns"
 	
 	case $((RANDOM%3)) in
-	0)
+	$NOPLAY)
 		echo "No Play you can stays in this" ${playerPosition[$player]} "position"
 		;;
-	1)
+	$LADDER)
 		foundLadder $player
 		;;
-	2)
+	$SNAKE)
 		foundSnake $player
 		;;
 	esac
 	((counter[$player]++))
 	checkWinningCondition $player
 }
-
 #roll a dice
 function rollDice()
 {
-	UPPER_LIMIT=6
-	LOWER_LIMIT=1
 	currentPositions=$((RANDOM%($UPPER_LIMIT-$LOWER_LIMIT+1)+$LOWER_LIMIT))
 	echo $currentPositions
 }
@@ -94,7 +96,7 @@ function checkWinningCondition()
 {
 	local winner=$1
 	
-	if [[((${playerPosition[$play]} -eq $FINALPOSITION)) ]]
+	if [[((${playerPosition[$winner]} -eq $FINALPOSITION)) ]]
 	then
 		echo "*******Congratulation $winner is winner*******"
 		gameOn=0
