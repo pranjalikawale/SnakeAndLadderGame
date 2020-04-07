@@ -26,36 +26,35 @@ function gameFeature
 	local play=$1
 	playerPosition[$play]=0
 	while [[((${playerPosition[$play]} -lt $FINALPOSITION))]]
-   do
+	do
 		currentPosition="$(rollDice)"
 		feature=$((RANDOM%3))
-   	case $feature in
-   	0)
+		case $feature in
+		0)
 			echo "No Play you can stays in this" ${playerPosition[$play]} "position"
-     		;;
-   	1)
+			;;
+		1)
 			if [[ (($((${playerPosition[$play]}+$currentPosition)) -le $FINALPOSITION))]]
 			then
-         	playerPosition[$play]=$((${playerPosition[$play]}+$currentPosition))
+				playerPosition[$play]=$((${playerPosition[$play]}+$currentPosition))
+				score[$play]="${score[$play]}  ${playerPosition[$play]}"
 			fi
-			score[$play]="${score[$play]}  ${playerPosition[$play]}"
 			echo "Ladder found the player moves ahead on" ${playerPosition[$play]} ", $currentPosition received on the die"
-      	;;
-   	2)
+			;;
+		2)
 			if [[ (($((${playerPosition[$play]}-$currentPosition)) -gt 0 ))]]
 			then
 				playerPosition[$play]=$((${playerPosition[$play]}-$currentPosition))
+				score[$play]="${score[$play]}  ${playerPosition[$play]}"
 			else
 				playerPosition[$play]=0
 			fi
-			score[$play]="${score[$play]}  ${playerPosition[$play]}"
 			echo "Snake found the player moves behind on" ${playerPosition[$play]} ", $currentPosition received on the die"
-      	;;
-      esac
+			;;
+		esac
 	done
 	echo "Total no of time dice roll: ${counter[@]}"
-   echo "Player position after every dice roll: ${score[@]}"
-
+	echo "Player position after every dice roll: ${score[@]}"
 }
 
 gamePlayer="Player1"
