@@ -27,6 +27,27 @@ function gamePlay()
 	displayScore
 }
 
+#include feature to get snake ladder and no play
+function gameFeature()
+{
+	local player=$1
+	echo "$player 's turns"
+	
+	case $((RANDOM%3)) in
+	0)
+		echo "No Play you can stays in this" ${playerPosition[$player]} "position"
+		;;
+	1)
+		foundLadder $player
+		;;
+	2)
+		foundSnake $player
+		;;
+	esac
+	((counter[$player]++))
+	checkWinningCondition $player
+}
+
 #roll a dice
 function rollDice()
 {
@@ -34,27 +55,6 @@ function rollDice()
 	LOWER_LIMIT=1
 	currentPositions=$((RANDOM%($UPPER_LIMIT-$LOWER_LIMIT+1)+$LOWER_LIMIT))
 	echo $currentPositions
-}
-
-#include feature to get snake ladder and no play
-function gameFeature()
-{
-	local play=$1
-	echo "$play 's turns"
-	
-	case $((RANDOM%3)) in
-	0)
-		echo "No Play you can stays in this" ${playerPosition[$play]} "position"
-		;;
-	1)
-		foundLadder $play
-		;;
-	2)
-		foundSnake $play
-		;;
-	esac
-	((counter[$play]++))
-	checkWinningCondition $play
 }
 
 #snake found decrement position
