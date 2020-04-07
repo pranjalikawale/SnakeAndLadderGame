@@ -33,7 +33,10 @@ function gameFeature
 			echo "No Play you can stays in this" ${playerPosition[$play]} "position"
      		;;
    	1)
-         playerPosition[$play]=$((${playerPosition[$play]}+$currentPosition))
+			if [[ (($((${playerPosition[$play]}+$currentPosition)) -le $FINALPOSITION))]]
+			then
+         	playerPosition[$play]=$((${playerPosition[$play]}+$currentPosition))
+			fi
 			echo "Ladder found the player moves ahead on" ${playerPosition[$play]} ", $currentPosition received on the die"
       	;;
    	2)
