@@ -1,5 +1,6 @@
 #!/bin/bash -x 
 
+declare -A counter
 declare -A playerPosition
 declare -A score
 FINALPOSITION=100
@@ -37,6 +38,7 @@ function gameFeature
 			then
          	playerPosition[$play]=$((${playerPosition[$play]}+$currentPosition))
 			fi
+			score[$play]="${score[$play]}  ${playerPosition[$play]}"
 			echo "Ladder found the player moves ahead on" ${playerPosition[$play]} ", $currentPosition received on the die"
       	;;
    	2)
@@ -46,10 +48,14 @@ function gameFeature
 			else
 				playerPosition[$play]=0
 			fi
+			score[$play]="${score[$play]}  ${playerPosition[$play]}"
 			echo "Snake found the player moves behind on" ${playerPosition[$play]} ", $currentPosition received on the die"
       	;;
       esac
 	done
+	echo "Total no of time dice roll: ${counter[@]}"
+   echo "Player position after every dice roll: ${score[@]}"
+
 }
 
 gamePlayer="Player1"
