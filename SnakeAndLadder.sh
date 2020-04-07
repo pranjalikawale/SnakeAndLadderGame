@@ -84,9 +84,9 @@ function foundLadder()
 	then
 		playerPosition[$playing]=$((${playerPosition[$playing]}+$dice))
 		score[$playing]="${score[$playing]}  ${playerPosition[$playing]}"
-   fi
-   echo "$dice received in the die"
-   echo "Ladder found the $playing moves ahead on ${playerPosition[$playing]}"
+	fi
+	echo "$dice received in the die"
+	echo "Ladder found the $playing moves ahead on ${playerPosition[$playing]}"
 }
 
 #check condition of player win
@@ -104,19 +104,19 @@ function checkWinningCondition()
 #display number of time dice roll
 function displayCount()
 {
-   for count in "${!counter[@]}"
-   do
-      echo $count "roll disc ${counter[$count]}"
-   done
+	for count in "${!counter[@]}"
+	do
+		echo $count "roll disc ${counter[$count]}"
+	done
 }
 
 #display score every score after dice roll
 function displayScore()
 {
-   for position in "${!score[@]}"
-   do
-      echo $position "Scores on disc after every dice roll: ${score[$position]}"
-   done
+	for position in "${!score[@]}"
+	do
+		echo $position "Scores on disc after every dice roll: ${score[$position]}"
+	done
 }
 
 gamePlay
