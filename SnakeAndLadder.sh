@@ -1,16 +1,20 @@
-#!/bin/bash -x 
+#!/bin/bash
 
-declare -A playerPosition
+gameOn=1
+finalPosition=100
+declare -A counter
 declare -A score
-FINALPOSITION=100
-
-#display start game msg
+declare -A player
+player=0
 function start()
 {
+   #player[]=0
+   #score[]=0
+   #counter[]=0
    echo "------SNAKE AND lADDER GAME START------"
+   gamePlay
 }
 
-#function to generate random number
 function rollDice()
 {
    UPPER_LIMIT=6
@@ -19,39 +23,66 @@ function rollDice()
    echo $currentPositions
 }
 
-#find feature like snake, ladder & no play
 function gameFeature
 {
-	local play=$1
-	playerPosition[$play]=0
-	while [[((${playerPosition[$play]} -lt $FINALPOSITION))]]
-   do
-		currentPosition="$(rollDice)"
-		feature=$((RANDOM%3))
-   	case $feature in
-   	0)
-			echo "No Play you can stays in this" ${playerPosition[$play]} "position"
-     		;;
-   	1)
-			if [[ (($((${playerPosition[$play]}+$currentPosition)) -le $FINALPOSITION))]]
-			then
-         	playerPosition[$play]=$((${playerPosition[$play]}+$currentPosition))
-			fi
-			echo "Ladder found the player moves ahead on" ${playerPosition[$play]} ", $currentPosition received on the die"
-      	;;
-   	2)
-			if [[ (($((${playerPosition[$play]}-$currentPosition)) -gt 0 ))]]
-			then
-				playerPosition[$play]=$((${playerPosition[$play]}-$currentPosition))
-			else
-				playerPosition[$play]=0
-			fi
-			echo "Snake found the player moves behind on" ${playerPosition[$play]} ", $currentPosition received on the die"
-      	;;
+      local play=$1
+      currentPosition="$(rollDice)"
+      ((counter[$play]++))
+      feature=$((RANDOM%3))
+      case $feature in
+      0)
+         echo "No Play you can stays in this" ${player[$play]} "position"
+         ;;
+      1)
+         if [[ (($((${player[$play]}+$currentPosition)) -le 100)) ]]
+         then
+            player[$play]=$((${player[$play]}+$currentPosition))
+         fi
+         score[$play]="${score[$play]}  ${player[$play]}"
+         echo "Ladder found the player moves ahead on" ${player[$play]} ", $currentPosition received in the die"
+         ;;
+      2)
+         if [[ (($((${player[$play]}-$currentPosition)) -gt 0 ))]]
+         then
+            player[$play]=$((${player[$play]}-$currentPosition))
+         else
+            player[$play]=0
+         fi
+         score[$play]="${score[$play]}  ${player[$play]}"
+         echo "Snake found the player moves behind on" ${player[$play]} ", $currentPosition position received in the die"
+         ;;
       esac
-	done
+      checkWinningCondition $play
 }
 
-gamePlayer="Player1"
+function gamePlay()
+{
+   while [[(($gameOn -gt 0))]]
+   do
+      if [[(( $((RANDOM%2)) -eq 0))]]
+      then
+         echo "Player1 is turns"
+         gamePlayer="Player1"
+         gameFeature $gamePlayer
+      else
+         echo "Player2 is turns"
+         gamePlayer="Player2"
+         gameFeature $gamePlayer
+      fi
+   done
+   echo "Players: ${!counter[@]}"
+   echo "Total no of time dice roll: ${counter[@]}"
+   echo "Players: ${!score[@]}"
+   echo "Player position after every dice roll: ${score[@]}"
+}
+
+function checkWinningCondition()
+{
+   local play=$1
+   if [[((${player[$play]} -eq $finalPosition)) ]]
+   then
+      echo "$1 is winner"
+      gameOn=0
+   fi
+}
 start
-gameFeature $gamePlayer
